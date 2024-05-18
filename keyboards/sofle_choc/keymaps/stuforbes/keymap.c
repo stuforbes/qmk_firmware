@@ -18,6 +18,11 @@
 enum sofle_layers {
     _QWERTY,
     _RAISE,
+    _LOWER,
+};
+
+enum custom_keycodes {
+    ARROW = SAFE_RANGE,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -29,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | Tab  |   Q  |   W  |   E  |   R  |   T  |                    |   Y  |   U  |   I  |   O  |   P  | Ins  |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * | Esc  |   A  |   S  |   D  |   F  |   G  |-------.    ,-------|   H  |   J  |   K  |   L  |   ;  |  '   |
- * |      |	 |	|      |      |      |       |    |       |       | +Lsft| +Lctl| +Lgui| +Lalt|      |      |
+ * |      |	     |      |      |      |      |       |    |       | +Lsft| +Lctl| +Lgui| +Lalt|      |      |
  * |------+------+------+------+------+------|  Mute |    | Pause |------+------+------+------+------+------|
  * |LShift|   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  |RShift|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
@@ -67,7 +72,56 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LSFT, KC_CAPS, KC_MS_BTN1, KC_MS_BTN2, _______,  _______,      _______,      _______, KC_BSLS, KC_MINS, KC_EQL,  _______,  _______, KC_RSFT,
                       KC_LGUI,    KC_LALT,    KC_LCTL,  KC_TRNS,      KC_ENT,       KC_SPC,  KC_TRNS, KC_RCTL, KC_RALT, KC_RCTL
 ),
+
+/*
+ * LOWER
+ * ,-----------------------------------------.                    ,-----------------------------------------.
+ * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |      |      |      |      |      |      |                    | ARROW|      |      |      |      |      |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |      |      |      |      |      |      |-------.    ,-------|      |      |      |      |      |      |
+ * |      |	 	 |      |      |      |      |       |    |       |      |      |      |      |      |      |
+ * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
+ * |      |      |      |      |      |      |-------|    |-------|      |      |      |      |      |      |
+ * `-----------------------------------------/       /     \      \-----------------------------------------'
+ *            |      |      |      |      | /Enter  /       \Space \  |      |      |      |      |
+ *            |      |      |      |      |/       /         \      \ |      |      |      |      |
+ *            `----------------------------------'           '------''---------------------------'
+ */
+
+[_LOWER] = LAYOUT(
+    _______,   _______,   _______,    _______,    _______,    _______,                          _______,    _______,    _______,    _______,    _______,    _______,
+    _______,   _______,   _______,    _______,    _______,    _______,                          ARROW,      _______,    _______,    _______,    _______,    _______,
+    _______,   _______,   _______,    _______,    _______,    _______,                          _______,    _______,    _______,    _______,    _______,    _______,
+    _______,   _______,   _______,    _______,    _______,    _______,  _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,
+                          _______,    _______,    _______,    _______,  KC_ENT,     KC_SPC,     _______,    _______,    _______,    _______
+),
 };
+
+bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+    // Get current mod and one-shot mod states.
+    const uint8_t mods = get_mods();
+    const uint8_t oneshot_mods = get_oneshot_mods();
+
+    switch (keycode) {
+        case ARROW:
+            if (record -> event.pressed) {
+                if((mods | oneshot_mods) & MOD_MASK_SHIFT) { // Is shift held?
+                    // Temporarily delete shift
+                    del_oneshot_mods(MOD_MASK_SHIFT);
+                    unregister_mods(MOD_MASK_SHIFT);
+                    SEND_STRING("=>");
+                    register_mods(mods);    // restore mods
+                } else {
+                    SEND_STRING("->");
+                }
+            }
+            return false;
+        default:
+            return true;
+    }
+}
 
 
 #ifdef ENCODER_ENABLE
@@ -178,6 +232,9 @@ static void print_status_narrow(void) {
             break;
         case _RAISE:
             oled_write_P(PSTR("Raise"), false);
+            break;
+        case _LOWER:
+            oled_write_P(PSTR("Lower"), false);
             break;
         default:
             oled_write_P(PSTR("???  "), false);
