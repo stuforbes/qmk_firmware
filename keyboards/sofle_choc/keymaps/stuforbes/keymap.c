@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
+#include "features/caps_word.h"
 
 enum sofle_layers {
     _QWERTY,
@@ -34,7 +35,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | Tab  |   Q  |   W  |   E  |   R  |   T  |                    |   Y  |   U  |   I  |   O  |   P  | Ins  |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * | Esc  |   A  |   S  |   D  |   F  |   G  |-------.    ,-------|   H  |   J  |   K  |   L  |   ;  |  '   |
- * |      |	     |      |      |      |      |       |    |       | +Lsft| +Lctl| +Lgui| +Lalt|      |      |
+ * |      |	     | +Lalt| +Lgui| +Lctl| +Lsft|       |    |       | +Lsft| +Lctl| +Lgui| +Lalt|      |      |
  * |------+------+------+------+------+------|  Mute |    | Pause |------+------+------+------+------+------|
  * |LShift|   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  |RShift|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
@@ -44,11 +45,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
 [_QWERTY] = LAYOUT( \
-    KC_GRV,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                       KC_6,              KC_7,             KC_8,             KC_9,             KC_0,    KC_GRV,
-    KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                       KC_Y,              KC_U,             KC_I,             KC_O,             KC_P,    KC_INS,
-    KC_ESC,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                       MT(MOD_LSFT, KC_H),MT(MOD_LCTL,KC_J),MT(MOD_LGUI,KC_K),MT(MOD_LALT,KC_L),KC_SCLN, KC_QUOT,
-    KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  KC_MUTE,   KC_MPLY,  KC_N,              KC_M,             KC_COMM,          KC_DOT,           KC_SLSH, KC_RSFT,
-                      KC_LCTL, KC_LGUI, KC_LALT, MO(1), KC_ENT,    KC_SPC,   MO(2),             KC_BSPC,          KC_DEL,           KC_RCTL
+    KC_GRV,   KC_1,   KC_2,               KC_3,               KC_4,               KC_5,                              KC_6,              KC_7,             KC_8,             KC_9,             KC_0,    KC_GRV,
+    KC_TAB,   KC_Q,   KC_W,               KC_E,               KC_R,               KC_T,                              KC_Y,              KC_U,             KC_I,             KC_O,             KC_P,    KC_INS,
+    KC_ESC,   KC_A,   MT(MOD_LALT, KC_S), MT(MOD_LGUI, KC_D), MT(MOD_LCTL, KC_F), MT(MOD_LSFT, KC_G),                MT(MOD_LSFT, KC_H),MT(MOD_LCTL,KC_J),MT(MOD_LGUI,KC_K),MT(MOD_LALT,KC_L),KC_SCLN, KC_QUOT,
+    KC_LSFT,  KC_Z,   KC_X,               KC_C,               KC_V,               KC_B,         KC_MUTE,   KC_MPLY,  KC_N,              KC_M,             KC_COMM,          KC_DOT,           KC_SLSH, KC_RSFT,
+                      KC_LCTL,            KC_LGUI,            KC_LALT,            MO(1),        KC_ENT,    KC_SPC,   MO(2),             KC_BSPC,          KC_RGUI,           KC_RCTL
 ),
 
 /* RAISE
@@ -70,7 +71,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_PGUP, KC_HOME,    KC_END,     _______,  _______,                             KC_LBRC, KC_RBRC, KC_LPRN, KC_RPRN,  _______, KC_F12,
     KC_ESC,  KC_PGDN, KC_MS_LEFT, KC_MS_DOWN, KC_MS_UP, KC_MS_RIGHT,                         KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, KC_O,    KC_QUOT,
     KC_LSFT, KC_CAPS, KC_MS_BTN1, KC_MS_BTN2, _______,  _______,      _______,      _______, KC_BSLS, KC_MINS, KC_EQL,  _______,  _______, KC_RSFT,
-                      KC_LGUI,    KC_LALT,    KC_LCTL,  KC_TRNS,      KC_ENT,       KC_SPC,  KC_TRNS, KC_RCTL, KC_RALT, KC_RCTL
+                      KC_LGUI,    KC_LALT,    KC_LCTL,  KC_TRNS,      KC_ENT,       KC_SPC,  KC_TRNS, KC_DEL,  KC_RALT, KC_RCTL
 ),
 
 /*
@@ -103,6 +104,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     // Get current mod and one-shot mod states.
     const uint8_t mods = get_mods();
     const uint8_t oneshot_mods = get_oneshot_mods();
+
+    if (!process_caps_word(keycode, record)) {
+        return false;
+    }
 
     switch (keycode) {
         case ARROW:
