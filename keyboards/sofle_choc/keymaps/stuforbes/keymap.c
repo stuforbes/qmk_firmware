@@ -223,7 +223,9 @@ static void print_status_narrow(void) {
     } else {*/
         oled_write_P(PSTR("\n\n\n\n\n\n\n\n\n\n"), false);
         led_t led_usb_state = host_keyboard_led_state();
-        if (led_usb_state.caps_lock) {
+        if (is_caps_word_on()) {
+            oled_write_ln_P(PSTR("CWORD"), true);
+        } else if (led_usb_state.caps_lock) {
             oled_write_ln_P(PSTR(" CAP "), true);
         } else {
             oled_write_ln_P(PSTR("     "), false);
