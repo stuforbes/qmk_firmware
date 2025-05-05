@@ -8,3 +8,5 @@ SRC += features/caps_word.c
 CAPS_WORD_ENABLE = no
 
 DYNAMIC_TAPPING_TERM_ENABLE = yes
+
+MOUSEKEY_ENABLE = yes

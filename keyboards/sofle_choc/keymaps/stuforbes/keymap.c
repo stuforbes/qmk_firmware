@@ -54,24 +54,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* RAISE
  * ,-----------------------------------------.                    ,-----------------------------------------.
- * |  `   |  F1  |  F2  |  F3  |  F4  |  F5  |                    |  F6  |  F7  |  F8  |  F9  | F10  | F11  |
+ * |  `   |      | MsWL | MsWD | MsWU | MsWR |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * | Tab  | PgUp | Home |  End |      |      |                    |   [  |   ]  |   (  |   )  |      | F12  |
+ * | Tab  | PgUp | Home |  End |      |      |                    |   [  |   ]  |   (  |   )  |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * | Esc  | PgDn | MsL  | MsD  | MsU  | MsR  |-------.    ,-------| Left | Down |  Up  | Right|      |      |
  * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
- * | Shift| Caps | MsB1 | MsB2 |      |      |-------|    |-------|   \  |   -  |   =  |  #   |      | Shift|
+ * | Shift| Caps | MsB1 | MsB2 |      |      |-------|    |-------|   \  |   -  |   =  |  #   |#(MAC)| Shift|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *            | LGUI | LALT | LCTL |ADJUST| /Enter  /       \Space \  |ADJUST| RCTL | RALT | RCTR |
  *            |      |      |      |      |/       /         \      \ |      |      |      |      |
  *            `----------------------------------'           '------''---------------------------'
  */
 [_RAISE] = LAYOUT(
-    KC_GRV,  KC_F1,   KC_F2,      KC_F3,      KC_F4,    KC_F5,   			                 KC_F6,   KC_F7,   KC_F8,   KC_F9,               KC_F10,  KC_F11,
-    KC_TAB,  KC_PGUP, KC_HOME,    KC_END,     _______,  _______,                             KC_LBRC, KC_RBRC, KC_LPRN, KC_RPRN,             _______, KC_F12,
-    KC_ESC,  KC_PGDN, KC_MS_LEFT, KC_MS_DOWN, KC_MS_UP, KC_MS_RIGHT,                         KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,            KC_O,    KC_QUOT,
-    KC_LSFT, KC_CAPS, KC_MS_BTN1, KC_MS_BTN2, _______,  _______,      _______,      _______, KC_BSLS, KC_MINS, KC_EQL,  KC_NONUS_BACKSLASH,  _______, KC_RSFT,
-                      KC_LGUI,    KC_LALT,    KC_LCTL,  KC_TRNS,      KC_ENT,       KC_SPC,  KC_TRNS, KC_DEL,  KC_RALT, KC_RCTL
+    KC_GRV,  _______, KC_MS_WH_LEFT,  KC_MS_WH_DOWN,    KC_MS_WH_UP, KC_MS_WH_RIGHT,                            _______, _______, _______, _______, _______, _______,
+    KC_TAB,  KC_PGUP, KC_HOME,        KC_END,           _______,     _______,                                   KC_LBRC, KC_RBRC, KC_LPRN, KC_RPRN, _______, _______,
+    KC_ESC,  KC_PGDN, KC_MS_LEFT,     KC_MS_DOWN,       KC_MS_UP,    KC_MS_RIGHT,                               KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,KC_O,    KC_QUOT,
+    KC_LSFT, KC_CAPS, KC_MS_BTN1,     KC_MS_BTN2,       _______,     _______,       _______,        _______,    KC_BSLS, KC_MINS, KC_EQL,  KC_NONUS_BACKSLASH,  KC_NUHS, KC_RSFT,
+                      KC_LGUI,        KC_LALT,          KC_LCTL,     KC_TRNS,       KC_ENT,         KC_SPC,     KC_TRNS, KC_DEL,  KC_RALT, KC_RCTL
 ),
 
 /*
